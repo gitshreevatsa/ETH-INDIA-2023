@@ -11,7 +11,7 @@ const {
   ScrollSepolia,
   zkevmtestnet,
   MUMBAI_80001,
-} = require("../utils/provider");
+} = require("./provider");
 
 const signHoneypot = async (chain, copyAddress) => {
   const providerNetwork = {
