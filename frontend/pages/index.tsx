@@ -78,11 +78,10 @@ export default function Home() {
 
   const handleSubmit = async () => {
     setRes("LOADING")
-    const res = await axios.get(`http://localhost:5005/${value}/${dataMap2.get(chain)}`);
+    const res = await axios.get(`https://didactic-guide-7xj55p775v6hr49r-5005.app.github.dev/${value}/${dataMap2.get(chain)}`);
     setRes(res)
     console.log(res.data)
   }
-
 
   const [value, setValue] = useState("")
   const [chain, setchain] = useState("");
@@ -107,7 +106,7 @@ export default function Home() {
                 <div className="flex gap-y-4 flex-col md:flex-row md:gap-x-4">
                   <FormControl>
                     <input className={"text-black flex h-10 md:w-full w-[17.5rem] rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950 dark:ring-offset-neutral-950 dark:placeholder:text-neutral-400 focus:outline-4 focus:outline-offset-2 focus:outline focus:outline-yellow-200"}
-                    placeholder="Enter Id" onChange={(e)=>{setValue(e.target.value)}} />
+                    placeholder="Enter Token Address" onChange={(e)=>{setValue(e.target.value)}} />
                   </FormControl>
                   <Select onValueChange={(value)=>setchain(value)}>
                     <SelectTrigger className="w-[280px] text-black">
