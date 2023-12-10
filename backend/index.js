@@ -119,14 +119,14 @@ app.get("/:id/:chain", async (req, res) => {
       taxCalc.sellTaxPercentage > 60 ||
       taxCalc.buyTaxPercentage > 60
     ) {
-      isHoneyPot = 1;
+      isHoneyPot = true;
       error = "HIGH TAX";
     } else {
-      isHoneyPot = 0;
+      isHoneyPot = false;
     }
 
     if (taxCalc.approve_error != undefined) {
-      isHoneyPot = 1;
+      isHoneyPot = true;
       error = "APPROVE FAILED";
     }
 
@@ -136,17 +136,17 @@ app.get("/:id/:chain", async (req, res) => {
       taxCalc.approve_error !== undefined
     ) {
       error = "Transfer Failed";
-      isHoneyPot = 1;
+      isHoneyPot = true;
     }
 
     if (taxCalc.buyTax > 60) {
-      isHoneyPot = 1;
+      isHoneyPot = true;
       buy_tax_error = "High Buy Tax";
       error = "High Buy Tax";
     }
 
     if (taxCalc.sell_tax > 60) {
-      isHoneyPot = 1;
+      isHoneyPot = true;
       sell_tax_error = "High Sell Tax";
       error = "High Sell Tax";
     }
@@ -167,13 +167,13 @@ app.get("/:id/:chain", async (req, res) => {
     }
 
     if (taxCalc.buyTaxPercentage === 0 && taxCalc.sellTaxPercentage === 0) {
-      isHoneyPot = 0;
+      isHoneyPot = false;
     }
 
-    // if (isHoneyPot === 1) {
-    //   await signHoneypot(chain, id);
-    //   console.log("Honeypot signed");
-    // }
+    if (isHoneyPot === true) {
+      await signHoneypot(chain, id);
+      console.log("Honeypot signed");
+    }
 
     console.log(reserves, "reserves");
     res.status(200).json({
@@ -181,14 +181,20 @@ app.get("/:id/:chain", async (req, res) => {
         buy_tax: sell_tax | undefined,
         sell_tax: buy_tax | undefined,
         transfer_tax: ((buy_tax + sell_tax) / 2) | undefined,
-        isHoneyPot: isHoneyPot,
+        isHoneyPot: isHoneyPot.toString(),
         isHoneyPotReason: [error],
         dex: tokenDetails.LPsAddress,
         pair: [token0.tokenName, token1.tokenName],
         totalHolders: token0Holders.eoaHolders.length,
         tokenName: token0.tokenName,
-        tokenReserves: ethers.utils.formatUnits(reserves._reserve0, token0.decimals),
-        counterTokenReserves: ethers.utils.formatUnits(reserves._reserve1, token1.decimals),
+        tokenReserves: ethers.utils.formatUnits(
+          reserves._reserve0,
+          token0.decimals
+        ),
+        counterTokenReserves: ethers.utils.formatUnits(
+          reserves._reserve1,
+          token1.decimals
+        ),
       },
       // totalSupply: await token0.total_supply(),
       // reserves: ethers.utils.formatUnits(reserves, token0.decimals),
